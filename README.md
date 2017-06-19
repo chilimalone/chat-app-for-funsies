@@ -1,13 +1,14 @@
 
-# CODEU CHAT SERVER | README
+# SIMPLE CHAT SERVER | README
 
 
 ## DISCLAIMER
 
-CODEU is a program created by Google to develop the skills of future software
-engineers. This project is not an offical Google Product. This project is a
-playground for those looking to develop their coding and software engineering
-skills.
+This is copied from CODEU developed by Google to learn and experiment with
+programming skills.
+
+There is a brief how to git doc written at
+https://docs.google.com/document/d/19odT1pDo9HwOVuOTpW7qqOezcDF1Qg-7DQYGzjJb0N4/edit?usp=sharing.
 
 
 ## ENVIRONMENT
@@ -38,7 +39,13 @@ JAVA&nbsp;7 when working with this project.
 
        ```
        $ sh run_server.sh <team_id> <team_secret> <port> <persistent-dir>
-       $ sh run_client.sh <host> <port>
+       $ sh run_simple_gui_client.sh <host> <port>
+       ```
+       
+       For example:
+       ```
+       $ sh run_server.sh 100 101 2017 ./
+       $ sh run_simple_gui_client.sh localhost 2017
        ```
 
      You must specify the following startup arguments for `run_server.sh:
