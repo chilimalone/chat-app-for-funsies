@@ -23,4 +23,5 @@ if [[ "${HOST}" == "" || "${PORT}" == "" ]] ; then
 fi
 
 cd './bin'
-java codeu.chat.ClientMain "${HOST}@${PORT}"
+
+java codeu.chat.SimpleGuiClientMain "${HOST}@${PORT}"

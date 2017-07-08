@@ -39,7 +39,7 @@ JAVA&nbsp;7 when working with this project.
 
        ```
        $ sh run_server.sh <team_id> <team_secret> <port> <persistent-dir>
-       $ sh run_simple_gui_client.sh <host> <port>
+       $ sh runclient.sh <host> <port>
        ```
        
        For example:
