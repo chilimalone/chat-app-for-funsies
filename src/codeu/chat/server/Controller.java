@@ -47,9 +47,10 @@ public final class Controller implements RawController, BasicController {
   public User newUser(String name) {
     return newUser(createId(), name, Time.now());
   }
-
-  public User newNickname(String name) {
-    return newNickname(createId(), name, Time.now());
+  
+  @Override
+  public User newNickname(String nickname) {
+    return newNickname(createId(), nickname, Time.now());
   }
 
   @Override
@@ -135,23 +136,23 @@ public final class Controller implements RawController, BasicController {
   }
 
  @Override 
-  public User newNickname(Uuid id, String name, Time creationTime) {
-    User user = null;
+  public User newNickname(Uuid id, String nickname, Time creationTime) {
+    User user = model.userById().first(id);
 
     if (isIdFree(id)) {
 
-      user = new User (id,name, creationTime);
-      model.add(user);
+      user = new User (id,user.name, nickname, creationTime);
+      model.updateUser(user);
 
       LOG.info(
-        "newNickname success (user.id=%s user.name=%s user.time%s)",
-        id, name, creationTime);
+        "newNickname success (user.id=%s user.name=%s user.nickname=%s user.time%s)",
+        id, user.name, nickname, creationTime);
 
       } else {
 
         LOG.info(
           "newNickname fail - id in use( user.id=%s user.name=%s user.time%s)",
-          id, name , creationTime);
+          id, user.name , creationTime);
       }
 
       return user;
