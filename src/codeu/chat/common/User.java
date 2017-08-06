@@ -49,7 +49,7 @@ public final class User {
   };
 
   public final Uuid id;
-  public final String name;
+  public String name;
   public final Time creation;
 
   public User(Uuid id, String name, Time creation) {
@@ -59,4 +59,6 @@ public final class User {
     this.creation = creation;
 
   }
+
+
 }

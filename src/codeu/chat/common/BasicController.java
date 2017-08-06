@@ -42,6 +42,8 @@ public interface BasicController {
   //   is undefined.
   User newUser(String name);
 
+  User newNickname(String name);
+
   // NEW CONVERSATION
   //
   //  Create a new conversation on the server. All parameters must be

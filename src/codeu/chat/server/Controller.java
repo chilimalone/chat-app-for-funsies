@@ -134,13 +134,13 @@ public final class Controller implements RawController, BasicController {
     return user;
   }
 
-  
+ @Override 
   public User newNickname(Uuid id, String name, Time creationTime) {
     User user = null;
 
     if (isIdFree(id)) {
 
-      user = new User (id, name, creationTime);
+      user = new User (id,name, creationTime);
       model.add(user);
 
       LOG.info(

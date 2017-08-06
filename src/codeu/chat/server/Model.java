@@ -76,6 +76,12 @@ public final class Model {
     userByText.insert(user.name, user);
   }
 
+  public void updateUser(User user) {
+    userById.insert(user.id, user);
+    userByTime.insert(user.creation,user);
+    userByText.insert(user.name, user);
+  }
+  
   public StoreAccessor<Uuid, User> userById() {
     return userById;
   }
