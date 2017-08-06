@@ -48,6 +48,10 @@ public final class Controller implements RawController, BasicController {
     return newUser(createId(), name, Time.now());
   }
 
+  public User newNickname(String name) {
+    return newNickname(createId(), name, Time.now());
+  }
+
   @Override
   public Conversation newConversation(String title, Uuid owner) {
     return newConversation(createId(), title, owner, Time.now());
@@ -128,6 +132,29 @@ public final class Controller implements RawController, BasicController {
     }
 
     return user;
+  }
+
+  
+  public User newNickname(Uuid id, String name, Time creationTime) {
+    User user = null;
+
+    if (isIdFree(id)) {
+
+      user = new User (id, name, creationTime);
+      model.add(user);
+
+      LOG.info(
+        "newNickname success (user.id=%s user.name=%s user.time%s)",
+        id, name, creationTime);
+
+      } else {
+
+        LOG.info(
+          "newNickname fail - id in use( user.id=%s user.name=%s user.time%s)",
+          id, name , creationTime);
+      }
+
+      return user;
   }
 
   @Override

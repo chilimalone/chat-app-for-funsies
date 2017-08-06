@@ -89,6 +89,29 @@ public class Controller implements BasicController {
     return response;
   }
 
+  public User newNickname(String name) {
+    User response = null;
+    
+    try (Connection connection = source.connect()) {
+
+      Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_NICKNAME_REQUEST);
+      Serializers.STRING.write(connection.out(), name);
+      LOG.info("newNickname: Request completed.");
+
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_NICKNAME_RESPONSE) {
+        response= Serializers.nullable(User.SERIALIZER).read(connection.in());
+        LOG.info("newNickname: Response completed.");
+      } else {
+        LOG.error("Response from server failed.");
+      }
+    } catch (Exception ex) {
+      System.out.println("ERROR: Exception during call on server. Check log for details.");
+      LOG.error(ex, "Exception during call on server.");
+    }
+
+    return response;
+  }
+
   @Override
   public Conversation newConversation(String title, Uuid owner)  {
 

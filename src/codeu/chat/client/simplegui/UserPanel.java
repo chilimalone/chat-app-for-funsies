@@ -23,6 +23,7 @@ import javax.swing.event.ListSelectionListener;
 
 import codeu.chat.client.ClientContext;
 import codeu.chat.common.User;
+import codeu.chat.client.Controller;
 
 // NOTE: JPanel is serializable, but there is no need to serialize UserPanel
 // without the @SuppressWarnings, the compiler will complain of no override for serialVersionUID
@@ -99,10 +100,14 @@ public final class UserPanel extends JPanel {
     final JButton userUpdateButton = new JButton("Update");
     final JButton userSignInButton = new JButton("Sign In");
     final JButton userAddButton = new JButton("Add");
+    final JButton userAddNicknameButton = new JButton("Add Nickname");
+
 
     buttonPanel.add(userUpdateButton);
     buttonPanel.add(userSignInButton);
     buttonPanel.add(userAddButton);
+    buttonPanel.add(userAddNicknameButton);
+    userAddNicknameButton.setVisible(false);
 
     // Placement of title, list panel, buttons, and current user panel.
     titlePanelC.gridx = 0;
@@ -153,6 +158,7 @@ public final class UserPanel extends JPanel {
           final String data = userList.getSelectedValue();
           clientContext.user.signInUser(data);
           userSignedInLabel.setText("Hello " + data);
+          
         }
       }
     });
@@ -170,12 +176,25 @@ public final class UserPanel extends JPanel {
       }
     });
 
+    userAddNicknameButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        String s = (String) JOptionPane.showInputDialog(UserPanel.this, "Enter nickname:", "Add Nickname", JOptionPane.PLAIN_MESSAGE, null, null, "");
+        if (s!=null && s.length()>0) {
+          clientContext.user.addNickname(s);
+          UserPanel.this.getAllUsers(listModel);
+        }
+      }
+    });
+
+
     userList.addListSelectionListener(new ListSelectionListener() {
       @Override
       public void valueChanged(ListSelectionEvent e) {
         if (userList.getSelectedIndex() != -1) {
           final String data = userList.getSelectedValue();
           userInfoPanel.setText(clientContext.user.showUserInfo(data));
+          userAddNicknameButton.setVisible(true);
         }
       }
     });
