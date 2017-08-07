@@ -89,13 +89,15 @@ public class Controller implements BasicController {
     return response;
   }
 
-  public User newNickname(String name) {
+  @Override
+  public User newNickname(Uuid id, String name) {
     User response = null;
     
     try (Connection connection = source.connect()) {
 
       Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_NICKNAME_REQUEST);
       Serializers.STRING.write(connection.out(), name);
+      Uuid.SERIALIZER.write(connection.out(), id);
       LOG.info("newNickname: Request completed.");
 
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_NICKNAME_RESPONSE) {

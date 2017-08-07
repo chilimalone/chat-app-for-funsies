@@ -36,7 +36,7 @@ public interface RawController {
   // use, the call will fail and null will be returned.
   User newUser(Uuid id, String name, Time creationTime);
 
-  User newNickname(Uuid id, String name, Time creationTime);
+  User newNickname(Uuid id, String nickname, Time creationTime);
 
   // NEW CONVERSATION
   //

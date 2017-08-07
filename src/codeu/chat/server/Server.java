@@ -146,8 +146,9 @@ public final class Server {
     } else if (type ==NetworkCode.NEW_NICKNAME_REQUEST) {
 
       String name = Serializers.STRING.read(in);
+      Uuid id = Uuid.SERIALIZER.read(in);
 
-      User user = controller.newNickname(name);
+      User user = controller.newNickname(id, name);
 
       Serializers.INTEGER.write(out, NetworkCode.NEW_NICKNAME_RESPONSE);
       Serializers.nullable(User.SERIALIZER).write(out, user);

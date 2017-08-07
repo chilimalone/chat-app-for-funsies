@@ -80,6 +80,7 @@ public final class Model {
     userById.insert(user.id, user);
     userByTime.insert(user.creation,user);
     userByText.insert(user.name, user);
+    userByText.insert(user.nickname, user);
   }
   
   public StoreAccessor<Uuid, User> userById() {

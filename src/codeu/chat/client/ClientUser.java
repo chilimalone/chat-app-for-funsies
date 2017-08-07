@@ -105,7 +105,7 @@ public final class ClientUser {
   public void addNickname(String name) {
     boolean validInputs = isValidName(name);
 
-    User user = (validInputs) ? controller.newNickname(name) : null;
+    User user = (validInputs) ? controller.newNickname(current.id, name) : null;
 
     if (user == null) {
       System.out.format("Error: nickname not created - %s.\n",(validInputs) ? "server failure" : "bad input value");
@@ -132,6 +132,8 @@ public final class ClientUser {
     if (user == null) {
       LOG.warning("userContext.lookup() failed on ID: %s", id);
       return null;
+    } else if (!user.nickname.isEmpty()) {
+      return user.name + "(" + user.nickname + ")";
     } else {
       return user.name;
     }
@@ -156,7 +158,7 @@ public final class ClientUser {
 
   public static String getUserInfoString(User user) {
     return (user == null) ? "Null user" :
-        String.format(" User: %s\n   Id: %s\n   created: %s\n", user.name, user.id, user.creation);
+        String.format(" User: %s\n   Id: %s\n   created: %s\n nickname: %s\n", user.name, user.id, user.creation, user.nickname);
   }
 
   public String showUserInfo(String uname) {
