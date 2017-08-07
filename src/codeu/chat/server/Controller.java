@@ -139,8 +139,9 @@ public final class Controller implements RawController, BasicController {
   public User newNickname(Uuid id, String nickname, Time creationTime) {
     User user = model.userById().first(id);
 
-    user = new User (id,user.name, nickname, user.creation);
-    model.updateUser(user);
+    //user = new User (id,user.name, nickname, user.creation);
+    //model.updateUser(user);
+    user.changeNickname(nickname);
 
     LOG.info(
         "newNickname success (user.id=%s user.name=%s user.nickname=%s user.time%s)",
