@@ -60,21 +60,19 @@ public final class User {
     this.id = id;
     this.name = name;
     this.creation = creation;
-    this.nickname= "";
+    this.nickname = "";
 
   }
   
   public User(Uuid id, String name, String nickname, Time creation) {
     this.id = id;
-    this.name= name;
-    this.nickname=nickname;
-    this.creation =creation;
+    this.name = name;
+    this.nickname = nickname;
+    this.creation = creation;
   }
 
   public void changeNickname(String newNickname){
-    nickname=newNickname;
+    nickname = newNickname;
   }
-
-
 
 }

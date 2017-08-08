@@ -23,7 +23,6 @@ import javax.swing.event.ListSelectionListener;
 
 import codeu.chat.client.ClientContext;
 import codeu.chat.common.User;
-import codeu.chat.client.Controller;
 
 // NOTE: JPanel is serializable, but there is no need to serialize UserPanel
 // without the @SuppressWarnings, the compiler will complain of no override for serialVersionUID
@@ -157,11 +156,7 @@ public final class UserPanel extends JPanel {
         if (userList.getSelectedIndex() != -1) {
           final String data = userList.getSelectedValue();
           clientContext.user.signInUser(data);
-          //if (clientContext.user.nickname.isEmpty())
-            userSignedInLabel.setText("Hello " + data);
-          //else
-            //userSignedInLabel.setText("Hello " + clientContext.user.nickname);
-          
+          userSignedInLabel.setText("Hello " + data);
         }
       }
     });
@@ -182,9 +177,9 @@ public final class UserPanel extends JPanel {
     userAddNicknameButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        String s = (String) JOptionPane.showInputDialog(UserPanel.this, "Enter nickname:", "Add Nickname", JOptionPane.PLAIN_MESSAGE, null, null, "");
-        if (s!=null && s.length()>0) {
-          clientContext.user.addNickname(s);
+        String newNickname = (String) JOptionPane.showInputDialog(UserPanel.this, "Enter nickname:", "Add Nickname", JOptionPane.PLAIN_MESSAGE, null, null, "");
+        if (newNickname != null && newNickname.length() > 0) {
+          clientContext.user.addNickname(newNickname);
           UserPanel.this.getAllUsers(listModel);
         }
       }

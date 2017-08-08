@@ -108,7 +108,7 @@ public final class ClientUser {
     User user = (validInputs) ? controller.newNickname(current.id, name) : null;
 
     if (user == null) {
-      System.out.format("Error: nickname not created - %s.\n",(validInputs) ? "server failure" : "bad input value");
+      LOG.info("Error: nickname not created - %s.\n",(validInputs) ? "server failure" : "bad input value");
     } else {
       LOG.info("New nickname complete, Name= \"%s\" UUID=%s", user.name, user.id);
       updateUsers();
@@ -152,9 +152,6 @@ public final class ClientUser {
       usersByName.insert(user.name, user);
     }
   }
-
-  //public void updateNicknames() {
-
 
   public static String getUserInfoString(User user) {
     return (user == null) ? "Null user" :

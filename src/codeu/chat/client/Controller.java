@@ -101,7 +101,7 @@ public class Controller implements BasicController {
       LOG.info("newNickname: Request completed.");
 
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_NICKNAME_RESPONSE) {
-        response= Serializers.nullable(User.SERIALIZER).read(connection.in());
+        response = Serializers.nullable(User.SERIALIZER).read(connection.in());
         LOG.info("newNickname: Response completed.");
       } else {
         LOG.error("Response from server failed.");

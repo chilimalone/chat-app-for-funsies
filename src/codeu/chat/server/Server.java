@@ -143,7 +143,7 @@ public final class Server {
       Serializers.INTEGER.write(out, NetworkCode.NEW_USER_RESPONSE);
       Serializers.nullable(User.SERIALIZER).write(out, user);
 
-    } else if (type ==NetworkCode.NEW_NICKNAME_REQUEST) {
+    } else if (type == NetworkCode.NEW_NICKNAME_REQUEST) {
 
       String name = Serializers.STRING.read(in);
       Uuid id = Uuid.SERIALIZER.read(in);
