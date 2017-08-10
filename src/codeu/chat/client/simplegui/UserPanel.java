@@ -101,7 +101,6 @@ public final class UserPanel extends JPanel {
     final JButton userAddButton = new JButton("Add");
     final JButton userAddNicknameButton = new JButton("Add Nickname");
 
-
     buttonPanel.add(userUpdateButton);
     buttonPanel.add(userSignInButton);
     buttonPanel.add(userAddButton);
@@ -177,7 +176,8 @@ public final class UserPanel extends JPanel {
     userAddNicknameButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        String newNickname = (String) JOptionPane.showInputDialog(UserPanel.this, "Enter nickname:", "Add Nickname", JOptionPane.PLAIN_MESSAGE, null, null, "");
+        String newNickname = (String) JOptionPane.showInputDialog(
+            UserPanel.this, "Enter nickname:", "Add Nickname", JOptionPane.PLAIN_MESSAGE, null, null, "");
         if (newNickname != null && newNickname.length() > 0) {
           clientContext.user.addNickname(newNickname);
           UserPanel.this.getAllUsers(listModel);
