@@ -50,7 +50,14 @@ public final class Controller implements RawController, BasicController {
   
   @Override
   public User newNickname(Uuid id, String nickname) {
-    return newNickname(id, nickname, Time.now());
+    User user = model.userById().first(id);
+
+    user.changeNickname(nickname);
+
+    LOG.info("New nickname success (user.id=%s user.name=%s user.nickname=%s user.time=%s)",
+        id, user.name, nickname, user.creation);
+
+    return user;
   }
 
   @Override
@@ -135,8 +142,8 @@ public final class Controller implements RawController, BasicController {
     return user;
   }
 
- @Override 
-  public User newNickname(Uuid id, String nickname, Time creationTime) {
+ /*@Override 
+  public User changeNickname(Uuid id, String nickname) {
     User user = model.userById().first(id);
 
     user.changeNickname(nickname);
@@ -146,7 +153,7 @@ public final class Controller implements RawController, BasicController {
     id, user.name, nickname, user.creation);
 
     return user;
-  }
+  }*/
 
   @Override
   public Conversation newConversation(Uuid id, String title, Uuid owner, Time creationTime) {
