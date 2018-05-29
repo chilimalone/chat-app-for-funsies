@@ -20,6 +20,7 @@ import codeu.chat.client.ClientUser;
 import codeu.chat.client.Controller;
 import codeu.chat.client.View;
 
+// Hello world comment
 public final class ClientContext {
 
   public final ClientUser user;
