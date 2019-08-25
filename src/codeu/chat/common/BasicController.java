@@ -42,6 +42,7 @@ public interface BasicController {
   //   is undefined.
   User newUser(String name);
 
+
   User newNickname(Uuid id, String nickname);
 
   // NEW CONVERSATION

@@ -142,19 +142,6 @@ public final class Controller implements RawController, BasicController {
     return user;
   }
 
- /*@Override 
-  public User changeNickname(Uuid id, String nickname) {
-    User user = model.userById().first(id);
-
-    user.changeNickname(nickname);
-
-    LOG.info(
-    "newNickname success (user.id=%s user.name=%s user.nickname=%s user.time%s)",
-    id, user.name, nickname, user.creation);
-
-    return user;
-  }*/
-
   @Override
   public Conversation newConversation(Uuid id, String title, Uuid owner, Time creationTime) {
 

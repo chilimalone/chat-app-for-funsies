@@ -166,6 +166,8 @@ public final class UserPanel extends JPanel {
         final String s = (String) JOptionPane.showInputDialog(
             UserPanel.this, "Enter user name:", "Add User", JOptionPane.PLAIN_MESSAGE,
             null, null, "");
+        //final String x = (String)JOptionPane.showInputDialog(UserPanel.this, "Enter nickname:", "Add Nickname", JOptionPane.PLAIN_MESSAGE,
+        //  null, null, "");
         if (s != null && s.length() > 0) {
           clientContext.user.addUser(s);
           UserPanel.this.getAllUsers(listModel);
@@ -181,6 +183,7 @@ public final class UserPanel extends JPanel {
         if (newNickname != null && newNickname.length() > 0) {
           clientContext.user.addNickname(newNickname);
           UserPanel.this.getAllUsers(listModel);
+          //userSignedInLabel.setText("Hello "+newNickname);
         }
       }
     });
@@ -208,5 +211,11 @@ public final class UserPanel extends JPanel {
     for (final User u : clientContext.user.getUsers()) {
       usersList.addElement(u.name);
     }
+    /*for (final User u: clientContext.user.getUsers()) {
+      if (u != null && u.nickname.length() > 0) {
+        usersList.set(usersList.indexOf(u.name), u.nickname);
+        //userSignedInLabel.setText("Hello "+u.nickname);
+      }
+    }*/
   }
 }
