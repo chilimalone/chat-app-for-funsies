@@ -104,15 +104,16 @@ public final class ClientUser {
 
   public void addNickname(String name) {
     boolean validInputs = isValidName(name);
-
-    User user = (validInputs) ? controller.newNickname(current.id, name) : null;
-
-    if (user == null) {
-      LOG.info("Error: nickname not created - %s.\n",
-          (validInputs) ? "server failure" : "bad input value");
-    } else {
-      LOG.info("New nickname complete, Nickname= \"%s\" UUID=%s", user.nickname, user.id);
-      updateUsers();
+    
+    if (getCurrent() != null && signInUser(getCurrent().getName())) { 
+      User user = (validInputs) ? controller.newNickname(current.id, name) : null;
+      if (user == null) {
+        LOG.info("Error: nickname not created - %s.\n",
+            (validInputs) ? "server failure" : "bad input value");
+      } else {
+        LOG.info("New nickname complete, Nickname= \"%s\" UUID=%s", user.nickname, user.id);
+        updateUsers();
+      }
     }
   }
 
@@ -133,10 +134,9 @@ public final class ClientUser {
     if (user == null) {
       LOG.warning("userContext.lookup() failed on ID: %s", id);
       return null;
-    } //else if (user.nickname.length() > 0) {
-      //return user.name + "(" + user.nickname + ")";
-    //} 
-    else {
+    } else if (user.nickname.length() > 0) {
+      return user.name +" "+ "(" + user.nickname + ")";
+    } else {
       return user.name;
     }
   }
