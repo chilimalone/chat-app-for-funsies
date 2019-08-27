@@ -75,8 +75,4 @@ public final class User {
     nickname = newNickname;
   }
 
-  public String getName() {
-    return name;
-  }
-
 }

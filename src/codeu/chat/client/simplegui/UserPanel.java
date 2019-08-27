@@ -173,16 +173,13 @@ public final class UserPanel extends JPanel {
       }
     });
 
-    userAddNicknameButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed (ActionEvent e) {
+    userAddNicknameButton.addActionListener((ActionEvent e) -> {
         String newNickname = (String) JOptionPane.showInputDialog(
             UserPanel.this, "Enter nickname:", "Add Nickname", JOptionPane.PLAIN_MESSAGE, null, null, "");
         if (newNickname != null && newNickname.length() > 0) {
           clientContext.user.addNickname(newNickname);
           UserPanel.this.getAllUsers(listModel);
         }
-      }
     });
 
 
@@ -193,7 +190,7 @@ public final class UserPanel extends JPanel {
           final String data = userList.getSelectedValue();
           int s = data.indexOf(" ");
           if (s != -1) {
-            userInfoPanel.setText(clientContext.user.showUserInfo(data.substring(0,s)));
+            userInfoPanel.setText(clientContext.user.showUserInfo(data.substring(0, s)));
           } else {
             userInfoPanel.setText(clientContext.user.showUserInfo(data));
           }
