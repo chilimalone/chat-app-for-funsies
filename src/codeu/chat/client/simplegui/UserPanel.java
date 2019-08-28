@@ -209,7 +209,7 @@ public final class UserPanel extends JPanel {
 
     for (final User u : clientContext.user.getUsers()) {
       usersList.addElement(u.name);
-      if (u.nickname.length() > 0) {
+      if (u.getNickname().length() > 0) {
         usersList.set(usersList.indexOf(u.name), clientContext.user.getName(u.id));
       }
     }

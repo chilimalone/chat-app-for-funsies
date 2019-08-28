@@ -53,7 +53,7 @@ public final class User {
   public final Uuid id;
   public final String name;
   public final Time creation;
-  public String nickname;
+  private String nickname;
 
   public User(Uuid id, String name, Time creation) {
 
@@ -73,6 +73,10 @@ public final class User {
 
   public void changeNickname(String newNickname){
     nickname = newNickname;
+  }
+
+  public String getNickname() {
+    return nickname;
   }
 
 }
