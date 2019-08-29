@@ -99,10 +99,13 @@ public final class UserPanel extends JPanel {
     final JButton userUpdateButton = new JButton("Update");
     final JButton userSignInButton = new JButton("Sign In");
     final JButton userAddButton = new JButton("Add");
+    final JButton userAddNicknameButton = new JButton("Add Nickname");
 
     buttonPanel.add(userUpdateButton);
     buttonPanel.add(userSignInButton);
     buttonPanel.add(userAddButton);
+    buttonPanel.add(userAddNicknameButton);
+    userAddNicknameButton.setVisible(false);
 
     // Placement of title, list panel, buttons, and current user panel.
     titlePanelC.gridx = 0;
@@ -170,12 +173,28 @@ public final class UserPanel extends JPanel {
       }
     });
 
+    userAddNicknameButton.addActionListener((ActionEvent e) -> {
+        String newNickname = (String) JOptionPane.showInputDialog(
+            UserPanel.this, "Enter nickname:", "Add Nickname", JOptionPane.PLAIN_MESSAGE, null, null, "");
+        if (newNickname != null && newNickname.length() > 0) {
+          clientContext.user.addNickname(newNickname);
+          UserPanel.this.getAllUsers(listModel);
+        }
+    });
+
+
     userList.addListSelectionListener(new ListSelectionListener() {
       @Override
       public void valueChanged(ListSelectionEvent e) {
         if (userList.getSelectedIndex() != -1) {
           final String data = userList.getSelectedValue();
-          userInfoPanel.setText(clientContext.user.showUserInfo(data));
+          int s = data.indexOf(" ");
+          if (s != -1) {
+            userInfoPanel.setText(clientContext.user.showUserInfo(data.substring(0, s)));
+          } else {
+            userInfoPanel.setText(clientContext.user.showUserInfo(data));
+          }
+          userAddNicknameButton.setVisible(true);
         }
       }
     });
@@ -190,6 +209,10 @@ public final class UserPanel extends JPanel {
 
     for (final User u : clientContext.user.getUsers()) {
       usersList.addElement(u.name);
+      if (u.getNickname().length() > 0) {
+        usersList.set(usersList.indexOf(u.name), clientContext.user.getName(u.id));
+      }
     }
+    
   }
 }

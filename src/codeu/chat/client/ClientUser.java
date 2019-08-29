@@ -102,6 +102,24 @@ public final class ClientUser {
     }
   }
 
+  public void addNickname(String name) {
+    boolean validInputs = isValidName(name);
+
+    if (getCurrent() != null && signInUser(getCurrent().name)) {  
+      User user = (validInputs) ? controller.newNickname(current.id, name) : null;
+      if (user == null) {
+        LOG.info("Error: nickname not created - %s.\n",
+            (validInputs) ? "server failure" : "bad input value");
+      } else {
+        LOG.info("New nickname complete, Nickname= \"%s\" UUID=%s", user.getNickname(), user.id);
+        updateUsers();
+      }
+    } else {
+      LOG.info("Error: User not signed in. Please sign in first!");
+    }
+  }
+
+
   public void showAllUsers() {
     updateUsers();
     for (final User u : usersByName.all()) {
@@ -118,6 +136,8 @@ public final class ClientUser {
     if (user == null) {
       LOG.warning("userContext.lookup() failed on ID: %s", id);
       return null;
+    } else if (user.getNickname().length() > 0) {
+      return user.name + " " + "(" + user.getNickname() + ")";
     } else {
       return user.name;
     }
@@ -139,7 +159,8 @@ public final class ClientUser {
 
   public static String getUserInfoString(User user) {
     return (user == null) ? "Null user" :
-        String.format(" User: %s\n   Id: %s\n   created: %s\n", user.name, user.id, user.creation);
+        String.format(" User: %s\n   Id: %s\n   created: %s\n nickname: %s\n", 
+            user.name, user.id, user.creation, user.getNickname());
   }
 
   public String showUserInfo(String uname) {

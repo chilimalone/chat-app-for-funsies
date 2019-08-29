@@ -75,7 +75,7 @@ public final class Model {
     userByTime.insert(user.creation, user);
     userByText.insert(user.name, user);
   }
-
+  
   public StoreAccessor<Uuid, User> userById() {
     return userById;
   }

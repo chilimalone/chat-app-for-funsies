@@ -143,6 +143,16 @@ public final class Server {
       Serializers.INTEGER.write(out, NetworkCode.NEW_USER_RESPONSE);
       Serializers.nullable(User.SERIALIZER).write(out, user);
 
+    } else if (type == NetworkCode.NEW_NICKNAME_REQUEST) {
+
+      String name = Serializers.STRING.read(in);
+      Uuid id = Uuid.SERIALIZER.read(in);
+
+      User user = controller.newNickname(id, name);
+
+      Serializers.INTEGER.write(out, NetworkCode.NEW_NICKNAME_RESPONSE);
+      Serializers.nullable(User.SERIALIZER).write(out, user);
+
     } else if (type == NetworkCode.NEW_CONVERSATION_REQUEST) {
 
       final String title = Serializers.STRING.read(in);
