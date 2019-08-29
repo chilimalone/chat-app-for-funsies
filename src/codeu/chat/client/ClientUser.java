@@ -14,10 +14,7 @@
 
 package codeu.chat.client;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import codeu.chat.common.User;
 import codeu.chat.util.Logger;
@@ -33,6 +30,8 @@ public final class ClientUser {
   private final View view;
 
   private User current = null;
+
+  private char[] characters = null;
 
   private final Map<Uuid, User> usersById = new HashMap<>();
 
@@ -84,6 +83,18 @@ public final class ClientUser {
     return hadCurrent;
   }
 
+  public boolean checkPassword(String password) {
+    if (password.length() > characters.length || password.length() < characters.length) {
+      return false;
+    }
+    for (int i = 0; i < characters.length; i++) {
+      if (password.charAt(i) != characters[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   public void showCurrent() {
     printUser(current);
   }
@@ -117,6 +128,10 @@ public final class ClientUser {
     } else {
       LOG.info("Error: User not signed in. Please sign in first!");
     }
+  }
+
+  public void addPassword(String phrase) {
+    characters = phrase.toCharArray();
   }
 
 

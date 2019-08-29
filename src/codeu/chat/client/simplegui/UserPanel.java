@@ -154,8 +154,20 @@ public final class UserPanel extends JPanel {
       public void actionPerformed(ActionEvent e) {
         if (userList.getSelectedIndex() != -1) {
           final String data = userList.getSelectedValue();
-          clientContext.user.signInUser(data);
-          userSignedInLabel.setText("Hello " + data);
+          while (clientContext.user.getCurrent() == null) {
+            final String s = (String) JOptionPane.showInputDialog(
+                UserPanel.this, "Enter password: ", "Enter Password", JOptionPane.PLAIN_MESSAGE, 
+                null, null, "");
+            if (s != null && clientContext.user.checkPassword(s)) {
+              clientContext.user.signInUser(data);
+              userSignedInLabel.setText("Hello " + data);
+            } else if (s == null) {
+              break;
+            } else {
+              JOptionPane.showMessageDialog(
+                  UserPanel.this, "Wrong password. Please try again!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+          } 
         }
       }
     });
@@ -166,10 +178,29 @@ public final class UserPanel extends JPanel {
         final String s = (String) JOptionPane.showInputDialog(
             UserPanel.this, "Enter user name:", "Add User", JOptionPane.PLAIN_MESSAGE,
             null, null, "");
-        if (s != null && s.length() > 0) {
+        while (true) {
+          final String x = (String) JOptionPane.showInputDialog(
+              UserPanel.this, "Enter password:", "Add Password", JOptionPane.PLAIN_MESSAGE,
+              null, null, "");
+          if (x != null && x.length() >= 6) {
+            clientContext.user.addPassword(x);
+            if (s != null && s.length() > 0) {
+              clientContext.user.addUser(s);
+              UserPanel.this.getAllUsers(listModel);
+              break;
+            }
+          } else if (x == null) {
+            break;
+          } else {
+            JOptionPane.showMessageDialog(UserPanel.this, "Password isn't at least 6 characters long!",
+                "Error", JOptionPane.ERROR_MESSAGE);
+          }
+        }
+
+        /*if (s != null && s.length() > 0) {
           clientContext.user.addUser(s);
           UserPanel.this.getAllUsers(listModel);
-        }
+        }*/
       }
     });
 
@@ -182,6 +213,10 @@ public final class UserPanel extends JPanel {
         }
     });
 
+    /* Right after when adding user, prompt a message to add password. Call method from clientContext.user.addPassword(string) 
+     * to store it to the server database. Then within usersignin button method, call clientcontext.user.checkPassword(string) to see
+     * if password matches with what is stored in database. To store password, store it as list of characters.
+     * If not it will display password incorrect try again. Could consider displaying error message to log (server-wide). */
 
     userList.addListSelectionListener(new ListSelectionListener() {
       @Override
