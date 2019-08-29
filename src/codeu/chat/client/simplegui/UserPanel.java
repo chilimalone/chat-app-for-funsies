@@ -99,7 +99,7 @@ public final class UserPanel extends JPanel {
     final JButton userUpdateButton = new JButton("Update");
     final JButton userSignInButton = new JButton("Sign In");
     final JButton userAddButton = new JButton("Add");
-    final JButton userAddNicknameButton = new JButton("Add Nickname");
+    final JButton userAddNicknameButton = new JButton("Set Nickname");
 
     buttonPanel.add(userUpdateButton);
     buttonPanel.add(userSignInButton);
@@ -161,6 +161,7 @@ public final class UserPanel extends JPanel {
             if (s != null && clientContext.user.checkPassword(s)) {
               clientContext.user.signInUser(data);
               userSignedInLabel.setText("Hello " + data);
+              userAddNicknameButton.setVisible(true);
             } else if (s == null) {
               break;
             } else {
@@ -196,27 +197,17 @@ public final class UserPanel extends JPanel {
                 "Error", JOptionPane.ERROR_MESSAGE);
           }
         }
-
-        /*if (s != null && s.length() > 0) {
-          clientContext.user.addUser(s);
-          UserPanel.this.getAllUsers(listModel);
-        }*/
       }
     });
 
     userAddNicknameButton.addActionListener((ActionEvent e) -> {
         String newNickname = (String) JOptionPane.showInputDialog(
-            UserPanel.this, "Enter nickname:", "Add Nickname", JOptionPane.PLAIN_MESSAGE, null, null, "");
+            UserPanel.this, "Enter nickname:", "Set Nickname", JOptionPane.PLAIN_MESSAGE, null, null, "");
         if (newNickname != null && newNickname.length() > 0) {
           clientContext.user.addNickname(newNickname);
           UserPanel.this.getAllUsers(listModel);
         }
     });
-
-    /* Right after when adding user, prompt a message to add password. Call method from clientContext.user.addPassword(string) 
-     * to store it to the server database. Then within usersignin button method, call clientcontext.user.checkPassword(string) to see
-     * if password matches with what is stored in database. To store password, store it as list of characters.
-     * If not it will display password incorrect try again. Could consider displaying error message to log (server-wide). */
 
     userList.addListSelectionListener(new ListSelectionListener() {
       @Override
@@ -229,7 +220,6 @@ public final class UserPanel extends JPanel {
           } else {
             userInfoPanel.setText(clientContext.user.showUserInfo(data));
           }
-          userAddNicknameButton.setVisible(true);
         }
       }
     });
