@@ -183,7 +183,7 @@ public final class UserPanel extends JPanel {
           final String x = (String) JOptionPane.showInputDialog(
               UserPanel.this, "Enter password:", "Add Password", JOptionPane.PLAIN_MESSAGE,
               null, null, "");
-          if (x != null && x.length() >= 6) {
+          if (clientContext.user.isValidPassword(x)) {
             clientContext.user.addPassword(x);
             if (s != null && s.length() > 0) {
               clientContext.user.addUser(s);

@@ -14,7 +14,10 @@
 
 package codeu.chat.client;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Arrays;
 
 import codeu.chat.common.User;
 import codeu.chat.util.Logger;
@@ -31,7 +34,8 @@ public final class ClientUser {
 
   private User current = null;
 
-  private char[] characters = null;
+  private Map<String, Integer> hashstring = new HashMap<>();
+  private String salt;
 
   private final Map<Uuid, User> usersById = new HashMap<>();
 
@@ -84,13 +88,10 @@ public final class ClientUser {
   }
 
   public boolean checkPassword(String password) {
-    if (password.length() > characters.length || password.length() < characters.length) {
+    String test = password + salt;
+    int testhash = test.hashCode();
+    if (hashstring.get(salt) != testhash) {
       return false;
-    }
-    for (int i = 0; i < characters.length; i++) {
-      if (password.charAt(i) != characters[i]) {
-        return false;
-      }
     }
     return true;
   }
@@ -131,7 +132,24 @@ public final class ClientUser {
   }
 
   public void addPassword(String phrase) {
-    characters = phrase.toCharArray();
+    String alphaNumeric = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789" +
+        "abcdefghijklmnopqrstuvwxyz";
+    StringBuilder sb = new StringBuilder(6);
+    for (int i = 0; i < 6; i++) {
+      int index = (int) (alphaNumeric.length() * Math.random());
+      sb.append(alphaNumeric.charAt(index));
+    }
+    salt = sb.toString();
+    String password = phrase + salt;
+    hashstring.put(salt, password.hashCode());
+    
+  }
+
+  public boolean isValidPassword(String phrase) {
+    if (phrase != null && phrase.length() >= 6) {
+      return true;
+    }
+    return false;
   }
 
 
