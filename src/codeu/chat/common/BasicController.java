@@ -54,4 +54,11 @@ public interface BasicController {
   //  Whether conversations can have the same title is undefined.
   Conversation newConversation(String title, Uuid owner);
 
+  // RENAME CONVERSATION
+  //
+  // Rename an existing conversation on the server. All parameters must
+  // be provided or else the server won't apply the change. If the operation
+  // is successful, the existing conversation's name will be renamed to
+  // the user-provided name.
+  Conversation renameConversation(Uuid id, String newTitle);
 }

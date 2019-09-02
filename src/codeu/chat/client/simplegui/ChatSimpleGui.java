@@ -65,7 +65,7 @@ public final class ChatSimpleGui {
     // NOTE: may have tweak size, or place in scrollable panel.
     mainFrame = new JFrame("Chat");
     mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    mainFrame.setSize(790, 450);
+    mainFrame.setMinimumSize(new Dimension(790, 600));
 
     // Main View - outermost graphics panel.
     final JPanel mainViewPanel = new JPanel(new GridBagLayout());

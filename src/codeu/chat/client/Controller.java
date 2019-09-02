@@ -136,4 +136,27 @@ public class Controller implements BasicController {
 
     return response;
   }
+
+  @Override
+  public Conversation renameConversation(Uuid conversation, String newTitle) {
+
+    Conversation response = null;
+
+    try(final Connection connection = source.connect()) {
+      Serializers.INTEGER.write(connection.out(), NetworkCode.RENAME_CONVERSATION_REQUEST);
+      Serializers.STRING.write(connection.out(), newTitle);
+      Uuid.SERIALIZER.write(connection.out(), conversation);
+
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.RENAME_CONVERSATION_RESPONSE) {
+        response = Serializers.nullable(Conversation.SERIALIZER).read(connection.in());
+      } else {
+        LOG.error("Response from server failed.");
+      }
+    } catch (Exception ex) {
+      System.out.println("ERROR: Exception during call on server. Check log for details.");
+      LOG.error(ex, "Exception during call on server.");
+    }
+
+    return response;
+  }
 }

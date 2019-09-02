@@ -51,6 +51,15 @@ public final class ClientConversation {
     this.userContext = userContext;
   }
 
+  //Rename the title of the conversation
+  public void renameConversation(String newTitle) {
+    if(isValidTitle(newTitle)) {
+      controller.renameConversation(currentConversation.id, newTitle);
+    } else {
+      LOG.error("Error: new name is invalid.");
+    }
+  }
+
   public void setMessageContext(ClientMessage messageContext) {
     this.messageContext = messageContext;
   }

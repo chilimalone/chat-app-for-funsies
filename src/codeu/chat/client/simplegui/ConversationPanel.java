@@ -75,10 +75,13 @@ public final class ConversationPanel extends JPanel {
 
     final JButton updateButton = new JButton("Update");
     final JButton addButton = new JButton("Add");
+    final JButton renameButton = new JButton("Rename");
 
     updateButton.setAlignmentX(Component.LEFT_ALIGNMENT);
     buttonPanel.add(updateButton);
     buttonPanel.add(addButton);
+    buttonPanel.add(renameButton);
+    renameButton.setVisible(false);
 
     // Put panels together
     titlePanelC.gridx = 0;
@@ -99,7 +102,7 @@ public final class ConversationPanel extends JPanel {
 
     buttonPanelC.gridx = 0;
     buttonPanelC.gridy = 8;
-    buttonPanelC.gridwidth = 10;
+    buttonPanelC.gridwidth = 12;
     buttonPanelC.gridheight = 4;
     buttonPanelC.fill = GridBagConstraints.HORIZONTAL;
     buttonPanelC.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -134,6 +137,26 @@ public final class ConversationPanel extends JPanel {
       }
     });
 
+    // User clicks Conversations Rename button.
+    renameButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        if(objectList.getSelectedIndex() != -1) {
+          final int index = objectList.getSelectedIndex();
+          final String data = objectList.getSelectedValue();
+          final ConversationSummary cs = ConversationPanel.this.lookupByTitle(data, index);
+
+          final String title = JOptionPane.showInputDialog(ConversationPanel.this, "Enter new title:",
+            "Rename Conversation", JOptionPane.PLAIN_MESSAGE);
+
+          clientContext.conversation.renameConversation(title);
+          cs.rename(title);
+
+          getAllConversations(listModel);
+        }
+      }
+    });
+
     // User clicks on Conversation - Set Conversation to current and fill in Messages panel.
     objectList.addListSelectionListener(new ListSelectionListener() {
       @Override
@@ -145,7 +168,11 @@ public final class ConversationPanel extends JPanel {
 
           clientContext.conversation.setCurrent(cs);
 
+          renameButton.setVisible(true);
+
           messagePanel.update(cs);
+        } else {
+          renameButton.setVisible(false);
         }
       }
     });

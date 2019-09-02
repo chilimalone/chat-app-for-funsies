@@ -251,6 +251,16 @@ public final class Server {
       Serializers.INTEGER.write(out, NetworkCode.GET_MESSAGES_BY_RANGE_RESPONSE);
       Serializers.collection(Message.SERIALIZER).write(out, messages);
 
+    } else if (type == NetworkCode.RENAME_CONVERSATION_REQUEST) {
+
+      final String newTitle = Serializers.STRING.read(in);
+      Uuid id = Uuid.SERIALIZER.read(in);
+      
+      final Conversation conv = controller.renameConversation(id, newTitle);
+      
+      Serializers.INTEGER.write(out, NetworkCode.RENAME_CONVERSATION_RESPONSE);
+      Serializers.nullable(Conversation.SERIALIZER).write(out, conv);
+
     } else {
 
       // In the case that the message was not handled make a dummy message with

@@ -176,6 +176,19 @@ public final class Controller implements RawController, BasicController {
     return candidate;
   }
 
+  @Override
+  public Conversation renameConversation(Uuid id, String newTitle) {
+
+    final Conversation foundConv = model.conversationById().first(id);
+
+    if(foundConv != null) {
+      LOG.info("Conversation renamed: %s renamed to %s.", foundConv.title, newTitle);
+      foundConv.rename(newTitle);
+    }
+
+    return foundConv;
+  }
+
   private boolean isIdInUse(Uuid id) {
     return model.messageById().first(id) != null ||
            model.conversationById().first(id) != null ||
