@@ -53,7 +53,7 @@ public final class ConversationSummary implements ListViewable {
   public final Uuid id;
   public final Uuid owner;
   public final Time creation;
-  public String title;
+  private String title;
 
   public ConversationSummary(Uuid id, Uuid owner, Time creation, String title) {
 
@@ -67,6 +67,11 @@ public final class ConversationSummary implements ListViewable {
   // Changing the Conversation's title
   public void rename(String newTitle) {
     title = newTitle;
+  }
+
+  // Returns the title of the ConversationSummary
+  public String getTitle() {
+    return title;
   }
 
   // How this object should appear in a user-viewable list

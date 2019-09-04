@@ -197,7 +197,7 @@ public final class ClientMessage {
       LOG.info("ConversationHead is null");
     } else {
       LOG.info("ConversationHead: Title=\"%s\" UUID=%s first=%s last=%s\n",
-          conversationHead.title, conversationHead.id, conversationHead.firstMessage,
+          conversationHead.getTitle(), conversationHead.id, conversationHead.firstMessage,
           conversationHead.lastMessage);
 
       Uuid nextMessageId = getCurrentMessageFetchId(replaceAll);
@@ -219,7 +219,7 @@ public final class ClientMessage {
         nextMessageId = conversationContents.get(conversationContents.size() - 1).next;
       }
       LOG.info("Retrieved %d messages for conversation %s (%s).\n",
-          conversationContents.size(), conversationHead.id, conversationHead.title);
+          conversationContents.size(), conversationHead.id, conversationHead.getTitle());
 
       // Set current to first message of conversation.
       current = (conversationContents.size() > 0) ? conversationContents.get(0) : null;

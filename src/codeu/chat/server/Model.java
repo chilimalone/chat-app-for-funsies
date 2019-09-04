@@ -95,7 +95,7 @@ public final class Model {
   public void add(Conversation conversation) {
     conversationById.insert(conversation.id, conversation);
     conversationByTime.insert(conversation.creation, conversation);
-    conversationByText.insert(conversation.title, conversation);
+    conversationByText.insert(conversation.getTitle(), conversation);
   }
 
   public StoreAccessor<Uuid, Conversation> conversationById() {

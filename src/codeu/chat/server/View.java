@@ -117,7 +117,7 @@ public final class View implements BasicView, LogicalView, SinglesView {
     final Collection<Conversation> found = new ArrayList<>();
 
     for (final Conversation conversation : model.conversationByText().all()) {
-      if (Pattern.matches(filter, conversation.title)) {
+      if (Pattern.matches(filter, conversation.getTitle())) {
         found.add(conversation);
       }
     }

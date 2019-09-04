@@ -104,7 +104,7 @@ public final class ClientConversation {
       System.out.format("Error: conversation not created - %s.\n",
           (validInputs) ? "server failure" : "bad input value");
     } else {
-      LOG.info("New conversation: Title= \"%s\" UUID= %s", conv.title, conv.id);
+      LOG.info("New conversation: Title= \"%s\" UUID= %s", conv.getTitle(), conv.id);
 
       currentSummary = conv.summary;
 
@@ -148,7 +148,7 @@ public final class ClientConversation {
             currentSummary, currentSummary.id);
       } else {
         LOG.info("Get Conversation: Title=\"%s\" UUID=%s first=%s last=%s\n",
-            currentConversation.title, currentConversation.id, currentConversation.firstMessage,
+            currentConversation.getTitle(), currentConversation.id, currentConversation.firstMessage,
             currentConversation.lastMessage);
       }
     }
@@ -172,7 +172,7 @@ public final class ClientConversation {
 
     for (final ConversationSummary cs : view.getAllConversations()) {
       summariesByUuid.put(cs.id, cs);
-      summariesSortedByTitle.insert(cs.title, cs);
+      summariesSortedByTitle.insert(cs.getTitle(), cs);
     }
 
     if (currentChanged) {
@@ -188,7 +188,7 @@ public final class ClientConversation {
     } else {
       final String name = (userContext == null) ? null : userContext.getName(c.owner);
       final String ownerName = (name == null) ? "" : String.format(" (%s)", name);
-      System.out.format(" Title: %s\n", c.title);
+      System.out.format(" Title: %s\n", c.getTitle());
       System.out.format("    Id: %s owner: %s%s created %s\n", c.id, c.owner, ownerName, c.creation);
     }
   }

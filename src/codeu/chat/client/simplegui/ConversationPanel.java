@@ -68,6 +68,7 @@ public final class ConversationPanel extends JPanel {
     final JScrollPane listScrollPane = new JScrollPane(objectList);
     listShowPanel.add(listScrollPane);
     listScrollPane.setMinimumSize(new Dimension(250, 200));
+    listScrollPane.setPreferredSize(new Dimension(250, 200));
 
     // Button bar
     final JPanel buttonPanel = new JPanel();
@@ -138,22 +139,23 @@ public final class ConversationPanel extends JPanel {
     });
 
     // User clicks Conversations Rename button.
-    renameButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if(objectList.getSelectedIndex() != -1) {
-          final int index = objectList.getSelectedIndex();
-          final String data = objectList.getSelectedValue();
-          final ConversationSummary cs = ConversationPanel.this.lookupByTitle(data, index);
+    renameButton.addActionListener((ActionEvent e) -> {
+      if(objectList.getSelectedIndex() != -1) {
+        final int index = objectList.getSelectedIndex();
+        final String data = objectList.getSelectedValue();
+        final ConversationSummary cs = ConversationPanel.this.lookupByTitle(data, index);
 
-          final String title = JOptionPane.showInputDialog(ConversationPanel.this, "Enter new title:",
-            "Rename Conversation", JOptionPane.PLAIN_MESSAGE);
+        final String title = JOptionPane.showInputDialog(ConversationPanel.this, "Enter new title:",
+          "Rename Conversation", JOptionPane.PLAIN_MESSAGE);
 
-          clientContext.conversation.renameConversation(title);
-          cs.rename(title);
+        JOptionPane.showMessageDialog(null, clientContext.user.getCurrent().name +
+          " has renamed the conversation " + cs.getTitle() + " to " + title + ".");
 
-          getAllConversations(listModel);
-        }
+        clientContext.conversation.renameConversation(title);
+
+        cs.rename(title);
+        getAllConversations(listModel);
+   
       }
     });
 
@@ -187,7 +189,7 @@ public final class ConversationPanel extends JPanel {
     convDisplayList.clear();
 
     for (final ConversationSummary conv : clientContext.conversation.getConversationSummaries()) {
-      convDisplayList.addElement(conv.title);
+      convDisplayList.addElement(conv.getTitle());
     }
   }
 
@@ -197,7 +199,7 @@ public final class ConversationPanel extends JPanel {
 
     int localIndex = 0;
     for (final ConversationSummary cs : clientContext.conversation.getConversationSummaries()) {
-      if ((localIndex >= index) && cs.title.equals(title)) {
+      if ((localIndex >= index) && cs.getTitle().equals(title)) {
         return cs;
       }
       localIndex++;

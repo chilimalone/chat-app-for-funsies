@@ -68,9 +68,9 @@ public final class Conversation {
   public final Uuid owner;
   public final Time creation;
   public final Collection<Uuid> users = new HashSet<>();
-  public String title;
   public Uuid firstMessage = Uuid.NULL;
   public Uuid lastMessage = Uuid.NULL;
+  private String title;
 
   public Conversation(Uuid id, Uuid owner, Time creation, String title) {
 
@@ -86,5 +86,9 @@ public final class Conversation {
   public void rename(String newTitle) {
     title = newTitle;
     this.summary.rename(newTitle);
+  }
+
+  public String getTitle() {
+    return title;
   }
 }

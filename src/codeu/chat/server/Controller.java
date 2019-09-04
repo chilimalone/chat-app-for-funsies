@@ -178,11 +178,10 @@ public final class Controller implements RawController, BasicController {
 
   @Override
   public Conversation renameConversation(Uuid id, String newTitle) {
-
     final Conversation foundConv = model.conversationById().first(id);
 
     if(foundConv != null) {
-      LOG.info("Conversation renamed: %s renamed to %s.", foundConv.title, newTitle);
+      LOG.info("Conversation renamed: %s renamed to %s.", foundConv.getTitle(), newTitle);
       foundConv.rename(newTitle);
     }
 

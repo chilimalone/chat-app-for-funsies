@@ -252,7 +252,6 @@ public final class Server {
       Serializers.collection(Message.SERIALIZER).write(out, messages);
 
     } else if (type == NetworkCode.RENAME_CONVERSATION_REQUEST) {
-
       final String newTitle = Serializers.STRING.read(in);
       Uuid id = Uuid.SERIALIZER.read(in);
       
@@ -321,7 +320,7 @@ public final class Server {
         relay.write(id,
                     secret,
                     relay.pack(user.id, user.name, user.creation),
-                    relay.pack(conversation.id, conversation.title, conversation.creation),
+                    relay.pack(conversation.id, conversation.getTitle(), conversation.creation),
                     relay.pack(message.id, message.content, message.creation));
       }
     };
