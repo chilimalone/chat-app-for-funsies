@@ -18,6 +18,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Arrays;
+import java.security.*;
+import java.nio.charset.*;
 
 import codeu.chat.common.User;
 import codeu.chat.util.Logger;
@@ -34,9 +36,8 @@ public final class ClientUser {
 
   private User current = null;
 
-  private Map<String, Integer> hashstring = new HashMap<>();
-  private String salt;
-
+  private int counter = 0;
+ 
   private final Map<Uuid, User> usersById = new HashMap<>();
 
   // This is the set of users known to the server, sorted by name.
@@ -76,6 +77,7 @@ public final class ClientUser {
       final User newCurrent = usersByName.first(name);
       if (newCurrent != null) {
         current = newCurrent;
+        //counter++;
       }
     }
     return (prev != current);
@@ -87,10 +89,14 @@ public final class ClientUser {
     return hadCurrent;
   }
 
+  public void setCurrent(User user) {
+    current = user;
+  }
+
   public boolean checkPassword(String password) {
-    String test = password + salt;
-    int testhash = test.hashCode();
-    if (hashstring.get(salt) != testhash) {
+    String test = password + getCurrent().getSalt();
+    String hexstring = hexSHA(test);
+    if (!hexstring.equals(getCurrent().getHash())) {
       return false;
     }
     return true;
@@ -139,10 +145,30 @@ public final class ClientUser {
       int index = (int) (alphaNumeric.length() * Math.random());
       sb.append(alphaNumeric.charAt(index));
     }
-    salt = sb.toString();
+    String salt = sb.toString();
     String password = phrase + salt;
-    hashstring.put(salt, password.hashCode());
-    
+    String hexstring = hexSHA(password);
+    current = controller.newPassword(current.id, salt, hexstring);
+  }
+
+  private String hexSHA(String code) {
+    try {
+      MessageDigest digest = MessageDigest.getInstance("SHA-256");
+      byte[] encodedhash = digest.digest(code.getBytes(StandardCharsets.UTF_8));
+      return bytesToHex(encodedhash);
+    } catch (Exception e) {
+      return "";
+    }
+  }
+
+  private String bytesToHex(byte[] hash) {
+    StringBuffer hexString = new StringBuffer();
+    for (int i = 0; i < hash.length; i++) {
+      String hex = Integer.toHexString(0xff & hash[i]);
+      if (hex.length() == 1) hexString.append('0');
+        hexString.append(hex);
+    }
+    return hexString.toString();
   }
 
   public boolean isValidPassword(String phrase) {

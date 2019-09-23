@@ -154,7 +154,7 @@ public final class UserPanel extends JPanel {
       public void actionPerformed(ActionEvent e) {
         if (userList.getSelectedIndex() != -1) {
           final String data = userList.getSelectedValue();
-          while (clientContext.user.getCurrent() == null) {
+          while (true) {
             final String s = (String) JOptionPane.showInputDialog(
                 UserPanel.this, "Enter password: ", "Enter Password", JOptionPane.PLAIN_MESSAGE, 
                 null, null, "");
@@ -162,6 +162,7 @@ public final class UserPanel extends JPanel {
               clientContext.user.signInUser(data);
               userSignedInLabel.setText("Hello " + data);
               userAddNicknameButton.setVisible(true);
+              break;
             } else if (s == null) {
               break;
             } else {
@@ -179,17 +180,17 @@ public final class UserPanel extends JPanel {
         final String s = (String) JOptionPane.showInputDialog(
             UserPanel.this, "Enter user name:", "Add User", JOptionPane.PLAIN_MESSAGE,
             null, null, "");
+        if (s != null && s.length() > 0) {
+          clientContext.user.addUser(s);
+          UserPanel.this.getAllUsers(listModel);
+        }
         while (true) {
           final String x = (String) JOptionPane.showInputDialog(
               UserPanel.this, "Enter password:", "Add Password", JOptionPane.PLAIN_MESSAGE,
               null, null, "");
           if (clientContext.user.isValidPassword(x)) {
             clientContext.user.addPassword(x);
-            if (s != null && s.length() > 0) {
-              clientContext.user.addUser(s);
-              UserPanel.this.getAllUsers(listModel);
-              break;
-            }
+            break;
           } else if (x == null) {
             break;
           } else {
@@ -237,6 +238,7 @@ public final class UserPanel extends JPanel {
       if (u.getNickname().length() > 0) {
         usersList.set(usersList.indexOf(u.name), clientContext.user.getName(u.id));
       }
+      clientContext.user.setCurrent(u);
     }
     
   }
