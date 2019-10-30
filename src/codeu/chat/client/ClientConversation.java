@@ -51,13 +51,22 @@ public final class ClientConversation {
     this.userContext = userContext;
   }
 
-  //Rename the title of the conversation
+  /** Rename the title of the conversation */
   public void renameConversation(String newTitle) {
-    if(isValidTitle(newTitle)) {
+    if (isValidTitle(newTitle)) {
       controller.renameConversation(currentConversation.id, newTitle);
     } else {
       LOG.error("Error: new name is invalid.");
     }
+  }
+
+  public void removeConversation(ConversationSummary cs) {
+    if (currentSummary != null) {
+      controller.removeConversation(cs.id);
+      summariesByUuid.remove(cs.id);
+      summariesSortedByTitle.remove(cs.getTitle());
+    }
+    updateAllConversations(true);
   }
 
   public void setMessageContext(ClientMessage messageContext) {
@@ -65,16 +74,21 @@ public final class ClientConversation {
   }
 
   // Validate the title of the conversation
-  static public boolean isValidTitle(String title) {
-    boolean clean = true;
+  public boolean isValidTitle(String title) {
     if ((title.length() <= 0) || (title.length() > 64)) {
-      clean = false;
-    } else {
-
-      // TODO: check for invalid characters
-
+      return false;
+    } else if (titleExists(title)) {
+      return false;
     }
-    return clean;
+    return true;
+  }
+
+
+  public boolean titleExists(String title) {
+    for (final Conversation c : view.getConversations(title)) {
+      return true;
+    }
+    return false;
   }
 
   public boolean hasCurrent() {
@@ -112,7 +126,10 @@ public final class ClientConversation {
     }
   }
 
-  public void setCurrent(ConversationSummary conv) { currentSummary = conv; }
+  public void setCurrent(ConversationSummary conv) { 
+    currentSummary = conv;
+    updateCurrentConversation();
+  }
 
   public void showAllConversations() {
     updateAllConversations(false);

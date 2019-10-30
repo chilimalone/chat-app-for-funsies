@@ -61,4 +61,10 @@ public interface BasicController {
   // is successful, the existing conversation's name will be renamed to
   // the user-provided name.
   Conversation renameConversation(Uuid id, String newTitle);
+
+  // DELETE CONVERSATION
+  // Deletes an existing conversation on the server. All parameters must
+  // be provided or else the server won't apply the change. If the operation
+  // is successul, the existing conversation will be removed from the server
+  void removeConversation(Uuid id);
 }

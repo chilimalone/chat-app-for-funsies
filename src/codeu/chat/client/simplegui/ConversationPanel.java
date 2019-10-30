@@ -23,6 +23,7 @@ import javax.swing.event.ListSelectionListener;
 
 import codeu.chat.client.ClientContext;
 import codeu.chat.common.ConversationSummary;
+import codeu.chat.client.ClientConversation;
 
 // NOTE: JPanel is serializable, but there is no need to serialize ConversationPanel
 // without the @SuppressWarnings, the compiler will complain of no override for serialVersionUID
@@ -77,12 +78,16 @@ public final class ConversationPanel extends JPanel {
     final JButton updateButton = new JButton("Update");
     final JButton addButton = new JButton("Add");
     final JButton renameButton = new JButton("Rename");
+    final JButton deleteButton = new JButton("Delete");
 
     updateButton.setAlignmentX(Component.LEFT_ALIGNMENT);
     buttonPanel.add(updateButton);
     buttonPanel.add(addButton);
     buttonPanel.add(renameButton);
+    buttonPanel.add(deleteButton);
+
     renameButton.setVisible(false);
+    deleteButton.setVisible(false);
 
     // Put panels together
     titlePanelC.gridx = 0;
@@ -125,12 +130,22 @@ public final class ConversationPanel extends JPanel {
       @Override
       public void actionPerformed(ActionEvent e) {
         if (clientContext.user.hasCurrent()) {
-          final String s = (String) JOptionPane.showInputDialog(
-              ConversationPanel.this, "Enter title:", "Add Conversation", JOptionPane.PLAIN_MESSAGE,
-              null, null, "");
+          final String s = (String) JOptionPane.showInputDialog( ConversationPanel.this, 
+              "Enter title:", "Add Conversation", JOptionPane.PLAIN_MESSAGE, null, null, "");
+
           if (s != null && s.length() > 0) {
-            clientContext.conversation.startConversation(s, clientContext.user.getCurrent().id);
-            ConversationPanel.this.getAllConversations(listModel);
+            if (!clientContext.conversation.titleExists(s)) {
+
+              clientContext.conversation.startConversation(s, clientContext.user.getCurrent().id);
+
+              ConversationPanel.this.getAllConversations(listModel);
+            } else {
+
+              JOptionPane.showMessageDialog(ConversationPanel.this, "A conversation already exists with that name!",
+                "Error", JOptionPane.ERROR_MESSAGE);
+
+              actionPerformed(e);
+            }
           }
         } else {
           JOptionPane.showMessageDialog(ConversationPanel.this, "You are not signed in.");
@@ -139,23 +154,64 @@ public final class ConversationPanel extends JPanel {
     });
 
     // User clicks Conversations Rename button.
-    renameButton.addActionListener((ActionEvent e) -> {
+    renameButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        if (objectList.getSelectedIndex() != -1) {
+          final int index = objectList.getSelectedIndex();
+          final String data = objectList.getSelectedValue();
+          final ConversationSummary cs = ConversationPanel.this.lookupByTitle(data, index);
+
+          final String title = JOptionPane.showInputDialog(ConversationPanel.this, "Enter new title:",
+            "Rename Conversation", JOptionPane.PLAIN_MESSAGE);
+
+          final String currentTitle = cs.getTitle();
+
+          if (title != null) {
+            if (title.length() != 0 && !clientContext.conversation.titleExists(title)) {
+              final String name = clientContext.user.lookup(cs.owner).name;
+
+              clientContext.message.addMessage(cs.owner, cs.id, name + " has renamed the conversation to " + title + "!");
+
+              clientContext.conversation.renameConversation(title);
+              cs.rename(title);
+
+            } else if (title.length() == 0) {
+              JOptionPane.showMessageDialog(ConversationPanel.this, "You must enter a name!", "Error",
+                JOptionPane.ERROR_MESSAGE);
+
+              actionPerformed(e);
+
+            } else {
+              JOptionPane.showMessageDialog(ConversationPanel.this, "A conversation already exists with that name!", 
+                "Error", JOptionPane.ERROR_MESSAGE);
+
+              actionPerformed(e);
+
+            }
+            getAllConversations(listModel);
+          }
+        }
+      }
+    });
+
+    // User clicks the Conversations Delete button.
+    deleteButton.addActionListener((ActionEvent e) -> {
       if(objectList.getSelectedIndex() != -1) {
         final int index = objectList.getSelectedIndex();
         final String data = objectList.getSelectedValue();
         final ConversationSummary cs = ConversationPanel.this.lookupByTitle(data, index);
+        
+        int response = JOptionPane.showConfirmDialog(ConversationPanel.this, "Are you sure you want to delete this conversation?",
+            "Confirm Conversation Deletion", JOptionPane.YES_NO_OPTION);
 
-        final String title = JOptionPane.showInputDialog(ConversationPanel.this, "Enter new title:",
-          "Rename Conversation", JOptionPane.PLAIN_MESSAGE);
-
-        JOptionPane.showMessageDialog(null, clientContext.user.getCurrent().name +
-          " has renamed the conversation " + cs.getTitle() + " to " + title + ".");
-
-        clientContext.conversation.renameConversation(title);
-
-        cs.rename(title);
+        if(response == JOptionPane.YES_OPTION) {
+          clientContext.conversation.removeConversation(cs);
+        }
+        
+        ConversationSummary temp = null;
+        messagePanel.update(temp); // Avoids ambiguity with JComponent's update() method 
         getAllConversations(listModel);
-   
       }
     });
 
@@ -171,10 +227,12 @@ public final class ConversationPanel extends JPanel {
           clientContext.conversation.setCurrent(cs);
 
           renameButton.setVisible(true);
+          deleteButton.setVisible(true);
 
           messagePanel.update(cs);
         } else {
           renameButton.setVisible(false);
+          deleteButton.setVisible(false);
         }
       }
     });

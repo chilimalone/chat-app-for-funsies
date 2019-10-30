@@ -53,8 +53,9 @@ public final class MessagePanel extends JPanel {
         ((u==null) ?
             ((owningConversation==null) ? "" : owningConversation.owner) :
             u.name));
-
-    messageConversationLabel.setText("Conversation: " + owningConversation.getTitle());
+    
+    messageConversationLabel.setText("Conversation: " + 
+        ((owningConversation == null) ? "" : owningConversation.getTitle()));
 
     getAllMessages(owningConversation);
   }

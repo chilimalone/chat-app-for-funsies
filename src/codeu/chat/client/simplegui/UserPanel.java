@@ -195,6 +195,8 @@ public final class UserPanel extends JPanel {
             userInfoPanel.setText(clientContext.user.showUserInfo(data));
           }
           userAddNicknameButton.setVisible(true);
+        } else {
+          userAddNicknameButton.setVisible(false);
         }
       }
     });

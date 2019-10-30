@@ -14,6 +14,7 @@
 
 package codeu.chat.util.store;
 
+import codeu.chat.common.ConversationSummary;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -65,6 +66,21 @@ public final class Store<KEY, VALUE> implements StoreAccessor<KEY, VALUE> {
     if (closestLink == null || comparator.compare(newLink.key, closestLink.key) != 0) {
       index.put(key, newLink);
     }
+  }
+
+  public void remove(KEY key) {
+
+    StoreLink<KEY, VALUE> current = rootLink.next;
+    StoreLink<KEY, VALUE> prev = rootLink;
+
+    while(current.next != null && comparator.compare(current.next.key, key) < 0) {
+      prev = current;
+      current = current.next;
+    }
+    
+    prev.next = current.next; // Remove link in list
+    index.remove(key);
+    
   }
 
   @Override

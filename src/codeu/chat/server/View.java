@@ -213,4 +213,13 @@ public final class View implements BasicView, LogicalView, SinglesView {
 
     return found;
   }
+
+  public void removeConversation(Uuid id) {
+    final Conversation foundConv = findConversation(id);
+
+    if(foundConv != null) {
+      model.remove(foundConv);
+    }
+  }
+
 }
