@@ -73,7 +73,7 @@ public final class Store<KEY, VALUE> implements StoreAccessor<KEY, VALUE> {
     StoreLink<KEY, VALUE> current = rootLink.next;
     StoreLink<KEY, VALUE> prev = rootLink;
 
-    while(current.next != null && comparator.compare(current.next.key, key) < 0) {
+    while(current.next != null && comparator.compare(current.next.key, key) <= 0) {
       prev = current;
       current = current.next;
     }
