@@ -158,7 +158,7 @@ public final class UserPanel extends JPanel {
             final String s = (String) JOptionPane.showInputDialog(
                 UserPanel.this, "Enter password: ", "Enter Password", JOptionPane.PLAIN_MESSAGE, 
                 null, null, "");
-            if (s != null && clientContext.user.checkPassword(s)) {
+            if (s != null &&  clientContext.user.checkPassword(data,s)) {
               clientContext.user.signInUser(data);
               userSignedInLabel.setText("Hello " + data);
               userAddNicknameButton.setVisible(true);
@@ -182,21 +182,21 @@ public final class UserPanel extends JPanel {
             null, null, "");
         if (s != null && s.length() > 0) {
           clientContext.user.addUser(s);
-          UserPanel.this.getAllUsers(listModel);
-        }
-        while (true) {
-          final String x = (String) JOptionPane.showInputDialog(
-              UserPanel.this, "Enter password:", "Add Password", JOptionPane.PLAIN_MESSAGE,
-              null, null, "");
-          if (clientContext.user.isValidPassword(x)) {
-            clientContext.user.addPassword(x);
-            break;
-          } else if (x == null) {
-            break;
-          } else {
-            JOptionPane.showMessageDialog(UserPanel.this, "Password isn't at least 6 characters long!",
+          while (true) {
+            final String x = (String) JOptionPane.showInputDialog(
+                UserPanel.this, "Enter password:", "Add Password", JOptionPane.PLAIN_MESSAGE,
+                null, null, "");
+            if (clientContext.user.isValidPassword(x)) {
+              clientContext.user.addPassword(s,x);
+              break;
+            } else if (x == null) {
+              break;
+            } else {
+              JOptionPane.showMessageDialog(UserPanel.this, "Password isn't at least 6 characters long!",
                 "Error", JOptionPane.ERROR_MESSAGE);
+            }
           }
+          UserPanel.this.getAllUsers(listModel);
         }
       }
     });
@@ -238,7 +238,6 @@ public final class UserPanel extends JPanel {
       if (u.getNickname().length() > 0) {
         usersList.set(usersList.indexOf(u.name), clientContext.user.getName(u.id));
       }
-      clientContext.user.setCurrent(u);
     }
     
   }

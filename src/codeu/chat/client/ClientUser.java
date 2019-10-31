@@ -14,12 +14,12 @@
 
 package codeu.chat.client;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Arrays;
-import java.security.*;
-import java.nio.charset.*;
 
 import codeu.chat.common.User;
 import codeu.chat.util.Logger;
@@ -35,8 +35,6 @@ public final class ClientUser {
   private final View view;
 
   private User current = null;
-
-  private int counter = 0;
  
   private final Map<Uuid, User> usersById = new HashMap<>();
 
@@ -77,7 +75,6 @@ public final class ClientUser {
       final User newCurrent = usersByName.first(name);
       if (newCurrent != null) {
         current = newCurrent;
-        //counter++;
       }
     }
     return (prev != current);
@@ -89,14 +86,10 @@ public final class ClientUser {
     return hadCurrent;
   }
 
-  public void setCurrent(User user) {
-    current = user;
-  }
-
-  public boolean checkPassword(String password) {
-    String test = password + getCurrent().getSalt();
+  public boolean checkPassword(String name, String password) {
+    String test = password + usersByName.first(name).getSalt();
     String hexstring = hexSHA(test);
-    if (!hexstring.equals(getCurrent().getHash())) {
+    if (!hexstring.equals(usersByName.first(name).getHash())) {
       return false;
     }
     return true;
@@ -137,7 +130,7 @@ public final class ClientUser {
     }
   }
 
-  public void addPassword(String phrase) {
+  public void addPassword(String name, String phrase) {
     String alphaNumeric = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789" +
         "abcdefghijklmnopqrstuvwxyz";
     StringBuilder sb = new StringBuilder(6);
@@ -148,7 +141,7 @@ public final class ClientUser {
     String salt = sb.toString();
     String password = phrase + salt;
     String hexstring = hexSHA(password);
-    current = controller.newPassword(current.id, salt, hexstring);
+    controller.newPassword(usersByName.first(name).id, salt, hexstring);
   }
 
   private String hexSHA(String code) {
@@ -229,5 +222,9 @@ public final class ClientUser {
   // Move to User's toString()
   public static void printUser(User user) {
     System.out.println(getUserInfoString(user));
+  }
+
+  public Store<String, User> getStore() {
+    return usersByName;
   }
 }

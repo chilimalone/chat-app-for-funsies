@@ -49,6 +49,8 @@ public final class NetworkCode {
       RELAY_WRITE_REQUEST = 29,
       RELAY_WRITE_RESPONSE = 30,
       NEW_NICKNAME_REQUEST=31,
-      NEW_NICKNAME_RESPONSE=32;
+      NEW_NICKNAME_RESPONSE=32,
+      SIGN_IN_REQUEST = 37,
+      SIGN_IN_RESPONSE = 38;
 
 }
