@@ -261,12 +261,13 @@ public final class Server {
       Serializers.nullable(Conversation.SERIALIZER).write(out, conv);
 
     } else if (type == NetworkCode.DELETE_CONVERSATION_REQUEST) {
-      Uuid id = Uuid.SERIALIZER.read(in);
+      final Uuid id = Uuid.SERIALIZER.read(in);
 
-      controller.removeConversation(id);
+      final Conversation conv = controller.removeConversation(id);
       view.removeConversation(id);
 
       Serializers.INTEGER.write(out, NetworkCode.DELETE_CONVERSATION_RESPONSE);
+      Serializers.nullable(Conversation.SERIALIZER).write(out, conv);
     
     } else {
 

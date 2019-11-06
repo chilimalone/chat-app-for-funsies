@@ -167,30 +167,23 @@ public final class ConversationPanel extends JPanel {
 
           final String currentTitle = cs.getTitle();
 
-          if (title != null) {
-            if (title.length() != 0 && !clientContext.conversation.titleExists(title)) {
-              final String name = clientContext.user.lookup(cs.owner).name;
+          if (clientContext.conversation.isValidTitle(title)) {
+            final String name = clientContext.user.lookup(cs.owner).name;
 
-              clientContext.message.addMessage(cs.owner, cs.id, name + " has renamed the conversation to " + title + "!");
+            clientContext.message.addMessage(cs.owner, cs.id, name + " has renamed the conversation to " + title + "!");
 
-              clientContext.conversation.renameConversation(title);
-              cs.rename(title);
+            clientContext.conversation.renameConversation(title);
+            cs.rename(title);
 
-            } else if (title.length() == 0) {
-              JOptionPane.showMessageDialog(ConversationPanel.this, "You must enter a name!", "Error",
-                JOptionPane.ERROR_MESSAGE);
-
-              actionPerformed(e);
-
-            } else {
-              JOptionPane.showMessageDialog(ConversationPanel.this, "A conversation already exists with that name!", 
+          } else {
+            JOptionPane.showMessageDialog(ConversationPanel.this, 
+                "Invalid name. The name is either too long or already being used by another conversation.", 
                 "Error", JOptionPane.ERROR_MESSAGE);
 
-              actionPerformed(e);
+           actionPerformed(e);
 
-            }
-            getAllConversations(listModel);
           }
+          getAllConversations(listModel);
         }
       }
     });

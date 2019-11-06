@@ -189,13 +189,14 @@ public final class Controller implements RawController, BasicController {
   }
 
   @Override
-  public void removeConversation(Uuid id) {
+  public Conversation removeConversation(Uuid id) {
     final Conversation foundConv = model.conversationById().first(id);
     
     if(foundConv != null) {
       LOG.info("Conversation (ID = %s, Name = %s) deleted", foundConv.id, foundConv.getTitle());
       model.remove(foundConv);
     }
+    return foundConv;
   }
 
   private boolean isIdInUse(Uuid id) {

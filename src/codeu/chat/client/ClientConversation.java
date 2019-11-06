@@ -60,12 +60,13 @@ public final class ClientConversation {
     }
   }
 
-  public void removeConversation(ConversationSummary cs) {
+  public Conversation removeConversation(ConversationSummary cs) {
     if (currentSummary != null) {
-      controller.removeConversation(cs.id);
       summariesByUuid.remove(cs.id);
       summariesSortedByTitle.remove(cs.getTitle());
+      return controller.removeConversation(cs.id);
     }  
+    return null;
   }
 
   public void setMessageContext(ClientMessage messageContext) {
@@ -74,9 +75,7 @@ public final class ClientConversation {
 
   // Validate the title of the conversation
   public boolean isValidTitle(String title) {
-    if ((title.length() <= 0) || (title.length() > 64)) {
-      return false;
-    } else if (titleExists(title)) {
+    if (title == null || (title.length() <= 0) || (title.length() > 64) || titleExists(title)) {
       return false;
     }
     return true;

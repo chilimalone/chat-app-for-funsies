@@ -66,5 +66,5 @@ public interface BasicController {
   // Deletes an existing conversation on the server. All parameters must
   // be provided or else the server won't apply the change. If the operation
   // is successul, the existing conversation will be removed from the server
-  void removeConversation(Uuid id);
+  Conversation removeConversation(Uuid id);
 }

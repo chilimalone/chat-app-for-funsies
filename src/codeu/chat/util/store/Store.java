@@ -68,18 +68,26 @@ public final class Store<KEY, VALUE> implements StoreAccessor<KEY, VALUE> {
     }
   }
 
-  public void remove(KEY key) {
+  public VALUE remove(KEY key) {
 
     StoreLink<KEY, VALUE> current = rootLink.next;
     StoreLink<KEY, VALUE> prev = rootLink;
 
-    while(current.next != null && comparator.compare(current.next.key, key) <= 0) {
+    while (current.next != null && comparator.compare(current.next.key, key) <= 0) {
       prev = current;
       current = current.next;
     }
     
-    prev.next = current.next; // Remove link in list
-    index.remove(key);
+    // Ensure that the current's key is equal to the key before deleting it.
+    // This is especially important when the end of the list is reached from
+    // searching, as not checking would result in the removal of a key that 
+    // was not supposed to be deleted.
+    if (comparator.compare(current.key, key) == 0) {
+      prev.next = current.next; // Remove link in list
+      index.remove(key);
+      return current.value;
+    }
+    return null;
     
   }
 

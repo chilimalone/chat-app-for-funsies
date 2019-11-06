@@ -98,10 +98,10 @@ public final class Model {
     conversationByText.insert(conversation.getTitle(), conversation);
   }
 
-  public void remove(Conversation conversation) {
-    conversationById.remove(conversation.id);
-    conversationByTime.remove(conversation.creation);
+  public Conversation remove(Conversation conversation) {
     conversationByText.remove(conversation.getTitle());
+    conversationByTime.remove(conversation.creation);
+    return conversationById.remove(conversation.id);
   }
 
   public StoreAccessor<Uuid, Conversation> conversationById() {
