@@ -158,7 +158,7 @@ public final class UserPanel extends JPanel {
             final String s = (String) JOptionPane.showInputDialog(
                 UserPanel.this, "Enter password: ", "Enter Password", JOptionPane.PLAIN_MESSAGE, 
                 null, null, "");
-            if (s != null &&  clientContext.user.checkPassword(data,s)) {
+            if (s != null && clientContext.user.checkPassword(data,s)) {
               clientContext.user.signInUser(data);
               userSignedInLabel.setText("Hello " + data);
               userAddNicknameButton.setVisible(true);
@@ -192,7 +192,7 @@ public final class UserPanel extends JPanel {
             } else if (x == null) {
               break;
             } else {
-              JOptionPane.showMessageDialog(UserPanel.this, "Password isn't at least 6 characters long!",
+              JOptionPane.showMessageDialog(UserPanel.this, "Password should be at least 6 characters long!",
                 "Error", JOptionPane.ERROR_MESSAGE);
             }
           }
