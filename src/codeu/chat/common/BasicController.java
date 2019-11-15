@@ -41,9 +41,10 @@ public interface BasicController {
   //   state of the user on the server. Whether user names can be shared
   //   is undefined.
   User newUser(String name);
-
-
+  
   User newNickname(Uuid id, String nickname);
+
+  User newPassword(Uuid id, String salt, String hash);
 
   // NEW CONVERSATION
   //

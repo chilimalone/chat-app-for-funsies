@@ -14,6 +14,8 @@
 
 package codeu.chat.client;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,7 +35,7 @@ public final class ClientUser {
   private final View view;
 
   private User current = null;
-
+ 
   private final Map<Uuid, User> usersById = new HashMap<>();
 
   // This is the set of users known to the server, sorted by name.
@@ -84,6 +86,15 @@ public final class ClientUser {
     return hadCurrent;
   }
 
+  public boolean checkPassword(String name, String password) {
+    String test = password + usersByName.first(name).getSalt();
+    String hexstring = hexSHA(test);
+    if (!hexstring.equals(usersByName.first(name).getHash())) {
+      return false;
+    }
+    return true;
+  }
+
   public void showCurrent() {
     printUser(current);
   }
@@ -117,6 +128,47 @@ public final class ClientUser {
     } else {
       LOG.info("Error: User not signed in. Please sign in first!");
     }
+  }
+
+  public void addPassword(String name, String phrase) {
+    String alphaNumeric = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789" +
+        "abcdefghijklmnopqrstuvwxyz";
+    StringBuilder sb = new StringBuilder(6);
+    for (int i = 0; i < 6; i++) {
+      int index = (int) (alphaNumeric.length() * Math.random());
+      sb.append(alphaNumeric.charAt(index));
+    }
+    String salt = sb.toString();
+    String password = phrase + salt;
+    String hexstring = hexSHA(password);
+    controller.newPassword(usersByName.first(name).id, salt, hexstring);
+  }
+
+  private String hexSHA(String code) {
+    try {
+      MessageDigest digest = MessageDigest.getInstance("SHA-256");
+      byte[] encodedhash = digest.digest(code.getBytes(StandardCharsets.UTF_8));
+      return bytesToHex(encodedhash);
+    } catch (Exception e) {
+      return "";
+    }
+  }
+
+  private String bytesToHex(byte[] hash) {
+    StringBuffer hexString = new StringBuffer();
+    for (int i = 0; i < hash.length; i++) {
+      String hex = Integer.toHexString(0xff & hash[i]);
+      if (hex.length() == 1) hexString.append('0');
+        hexString.append(hex);
+    }
+    return hexString.toString();
+  }
+
+  public boolean isValidPassword(String phrase) {
+    if (phrase != null && phrase.length() >= 6) {
+      return true;
+    }
+    return false;
   }
 
 
@@ -170,5 +222,9 @@ public final class ClientUser {
   // Move to User's toString()
   public static void printUser(User user) {
     System.out.println(getUserInfoString(user));
+  }
+
+  public Store<String, User> getStore() {
+    return usersByName;
   }
 }

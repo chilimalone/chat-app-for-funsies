@@ -17,6 +17,7 @@ package codeu.chat.common;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 
 import codeu.chat.util.Serializer;
 import codeu.chat.util.Serializers;
@@ -34,6 +35,8 @@ public final class User {
       Serializers.STRING.write(out, value.name);
       Serializers.STRING.write(out, value.nickname);
       Time.SERIALIZER.write(out, value.creation);
+      Serializers.STRING.write(out, value.salt);
+      Serializers.STRING.write(out, value.hash);
 
     }
 
@@ -44,7 +47,9 @@ public final class User {
           Uuid.SERIALIZER.read(in),
           Serializers.STRING.read(in),
           Serializers.STRING.read(in),
-          Time.SERIALIZER.read(in)
+          Time.SERIALIZER.read(in),
+          Serializers.STRING.read(in),
+          Serializers.STRING.read(in)
       );
 
     }
@@ -54,6 +59,8 @@ public final class User {
   public final String name;
   public final Time creation;
   private String nickname;
+  private String salt;
+  private String hash;
 
   public User(Uuid id, String name, Time creation) {
 
@@ -61,6 +68,8 @@ public final class User {
     this.name = name;
     this.creation = creation;
     this.nickname = "";
+    this.salt = "";
+    this.hash = "";
 
   }
   
@@ -69,14 +78,42 @@ public final class User {
     this.name = name;
     this.nickname = nickname;
     this.creation = creation;
+    this.salt = "";
+    this.hash = "";
+  }
+
+  public User(Uuid id, String name, String nickname, Time creation, String salt, 
+    String hash) {
+    this.id = id;
+    this.name = name;
+    this.nickname = nickname;
+    this.creation = creation;
+    this.salt = salt;
+    this.hash = hash;
   }
 
   public void changeNickname(String newNickname){
     nickname = newNickname;
   }
 
+  public void setSalt(String salt) {
+    this.salt = salt;
+  }
+
+  public void setHash(String hash) {
+    this.hash = hash;
+  }
+  
   public String getNickname() {
     return nickname;
+  }
+
+  public String getSalt() {
+    return salt;
+  }
+
+  public String getHash() {
+    return hash;
   }
 
 }

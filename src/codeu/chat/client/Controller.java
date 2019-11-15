@@ -114,6 +114,32 @@ public class Controller implements BasicController {
   }
 
   @Override
+  public User newPassword(Uuid id, String salt, String hash) {
+    User response = null;
+    
+    try (Connection connection = source.connect()) {
+
+      Serializers.INTEGER.write(connection.out(), NetworkCode.SIGN_IN_REQUEST);
+      Serializers.STRING.write(connection.out(), salt);
+      Serializers.STRING.write(connection.out(), hash);
+      Uuid.SERIALIZER.write(connection.out(), id);
+      LOG.info("newPassword: Request completed.");
+
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.SIGN_IN_RESPONSE) {
+        response = Serializers.nullable(User.SERIALIZER).read(connection.in());
+        LOG.info("newPassword: Response completed.");
+      } else {
+        LOG.error("Response from server failed.");
+      }
+    } catch (Exception ex) {
+      System.out.println("ERROR: Exception during call on server. Check log for details.");
+      LOG.error(ex, "Exception during call on server.");
+    }
+
+    return response;
+  }
+
+  @Override
   public Conversation newConversation(String title, Uuid owner)  {
 
     Conversation response = null;

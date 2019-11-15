@@ -47,6 +47,20 @@ public final class Controller implements RawController, BasicController {
   public User newUser(String name) {
     return newUser(createId(), name, Time.now());
   }
+
+  @Override
+  public User newPassword(Uuid id, String salt, String hash) {
+    User user = model.userById().first(id);
+
+    user.setSalt(salt);
+    user.setHash(hash);
+
+    LOG.info("New password success (user.id=%s user.name=%s user.nickname=%s user.time=%s)", 
+      user.id, user.name, user.getNickname(), user.creation);
+
+    return user;
+    
+  }
   
   @Override
   public User newNickname(Uuid id, String nickname) {

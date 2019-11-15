@@ -99,7 +99,7 @@ public final class UserPanel extends JPanel {
     final JButton userUpdateButton = new JButton("Update");
     final JButton userSignInButton = new JButton("Sign In");
     final JButton userAddButton = new JButton("Add");
-    final JButton userAddNicknameButton = new JButton("Add Nickname");
+    final JButton userAddNicknameButton = new JButton("Set Nickname");
 
     buttonPanel.add(userUpdateButton);
     buttonPanel.add(userSignInButton);
@@ -154,8 +154,22 @@ public final class UserPanel extends JPanel {
       public void actionPerformed(ActionEvent e) {
         if (userList.getSelectedIndex() != -1) {
           final String data = userList.getSelectedValue();
-          clientContext.user.signInUser(data);
-          userSignedInLabel.setText("Hello " + data);
+          while (true) {
+            final String s = (String) JOptionPane.showInputDialog(
+                UserPanel.this, "Enter password: ", "Enter Password", JOptionPane.PLAIN_MESSAGE, 
+                null, null, "");
+            if (s != null && clientContext.user.checkPassword(data,s)) {
+              clientContext.user.signInUser(data);
+              userSignedInLabel.setText("Hello " + data);
+              userAddNicknameButton.setVisible(true);
+              break;
+            } else if (s == null) {
+              break;
+            } else {
+              JOptionPane.showMessageDialog(
+                  UserPanel.this, "Wrong password. Please try again!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+          } 
         }
       }
     });
@@ -168,6 +182,20 @@ public final class UserPanel extends JPanel {
             null, null, "");
         if (s != null && s.length() > 0) {
           clientContext.user.addUser(s);
+          while (true) {
+            final String x = (String) JOptionPane.showInputDialog(
+                UserPanel.this, "Enter password:", "Add Password", JOptionPane.PLAIN_MESSAGE,
+                null, null, "");
+            if (clientContext.user.isValidPassword(x)) {
+              clientContext.user.addPassword(s,x);
+              break;
+            } else if (x == null) {
+              break;
+            } else {
+              JOptionPane.showMessageDialog(UserPanel.this, "Password should be at least 6 characters long!",
+                "Error", JOptionPane.ERROR_MESSAGE);
+            }
+          }
           UserPanel.this.getAllUsers(listModel);
         }
       }
@@ -175,13 +203,12 @@ public final class UserPanel extends JPanel {
 
     userAddNicknameButton.addActionListener((ActionEvent e) -> {
         String newNickname = (String) JOptionPane.showInputDialog(
-            UserPanel.this, "Enter nickname:", "Add Nickname", JOptionPane.PLAIN_MESSAGE, null, null, "");
+            UserPanel.this, "Enter nickname:", "Set Nickname", JOptionPane.PLAIN_MESSAGE, null, null, "");
         if (newNickname != null && newNickname.length() > 0) {
           clientContext.user.addNickname(newNickname);
           UserPanel.this.getAllUsers(listModel);
         }
     });
-
 
     userList.addListSelectionListener(new ListSelectionListener() {
       @Override
@@ -194,7 +221,6 @@ public final class UserPanel extends JPanel {
           } else {
             userInfoPanel.setText(clientContext.user.showUserInfo(data));
           }
-          userAddNicknameButton.setVisible(true);
         }
       }
     });
